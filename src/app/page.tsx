@@ -1,8 +1,21 @@
 "use client";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase"; // Ensure you created src/lib/supabase.ts
 
-// --- DATA: TICKER & CATEGORIES ---
+// --- TYPES FOR DATABASE CONTENT ---
+type Post = {
+  id: string;
+  title: string;
+  category: string;
+  summary: string;
+  author: string;
+  link: string;
+  is_sponsored: boolean;
+  created_at: string;
+};
+
+// --- STATIC DATA (Keep these static for now) ---
 const tickerNews = [
   "BREAKING: Bitcoin hits new all-time high amid regulatory talks...",
   "POLITICS: Senate approves new install mental housing bill...",
@@ -12,24 +25,6 @@ const tickerNews = [
 
 const categories = ["All", "Politics", "Real Estate", "Crypto", "Tech", "Sports", "Entertainment"];
 
-// --- DATA: MAIN HERO (AY'SMART) ---
-const mainHero = {
-  title: "Exclusive Deal: Secure 80 Acres of Prime Land with Flexible Installments",
-  description: "Ay'Smart Investment Ltd offers a massive discount + guaranteed rewards upon purchase. Whether you are buying for investment or development, this is the opportunity to own your future today. Verified documents available.",
-  // FIXED: Full Name Used Always
-  author: "Ay'Smart Investment Ltd",
-  link: "https://www.aysmartinvestmentltd.com"
-};
-
-// --- DATA: SIDEBAR TRENDING ---
-const trendingSide = [
-  { category: "POLITICS", title: "New Tax Laws: How They Affect Small Businesses in 2026" },
-  { category: "CRYPTO", title: "Ethereum 2.0: The Update Everyone Is Waiting For" },
-  { category: "VIRAL", title: "This 19-Year-Old Nigerian Coder Just Won Google's Award" },
-  { category: "AUTO", title: "Toyota vs Honda: The Best budget cars for 2026" },
-];
-
-// --- DATA: LOWER SECTIONS ---
 const globalNews = [
   { category: "Geopolitics", title: "UN Summit: Nations Agree on New AI Safety Protocols", color: "bg-blue-500" },
   { category: "Economy", title: "Asian Markets Rally as Tech Stocks Hit All-Time Highs", color: "bg-emerald-500" },
@@ -38,6 +33,37 @@ const globalNews = [
 
 export default function Home() {
   const [activeCategory, setActiveCategory] = useState("All");
+
+  // --- DYNAMIC STATE (Live Data) ---
+  const [heroPost, setHeroPost] = useState<Post | null>(null);
+  const [trendingSide, setTrendingSide] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // --- FETCH DATA FROM SUPABASE ---
+  useEffect(() => {
+    async function fetchNews() {
+      // Fetch all posts
+      const { data, error } = await supabase
+        .from('posts')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error("Error fetching data:", error);
+      } else if (data) {
+        // 1. Find the Sponsored Post for the Hero
+        const sponsored = data.find((post: Post) => post.is_sponsored === true);
+        if (sponsored) setHeroPost(sponsored);
+
+        // 2. Find Non-Sponsored Posts for Trending Sidebar
+        const regular = data.filter((post: Post) => post.is_sponsored === false);
+        setTrendingSide(regular);
+      }
+      setLoading(false);
+    }
+
+    fetchNews();
+  }, []);
 
   return (
     <main className="min-h-screen bg-[#020617] text-white overflow-x-hidden relative selection:bg-cyan-500 selection:text-black font-sans">
@@ -82,8 +108,8 @@ export default function Home() {
             key={cat}
             onClick={() => setActiveCategory(cat)}
             className={`px-4 py-1 rounded-full text-xs font-bold whitespace-nowrap transition-all ${activeCategory === cat
-                ? "bg-[#00B2FF] text-black"
-                : "bg-[#1E293B] text-slate-400 hover:text-white"
+              ? "bg-[#00B2FF] text-black"
+              : "bg-[#1E293B] text-slate-400 hover:text-white"
               }`}
           >
             {cat}
@@ -93,61 +119,73 @@ export default function Home() {
 
       <div className="max-w-7xl mx-auto px-4 py-8">
 
-        {/* --- MAIN GRID (The TechCrunch Layout) --- */}
+        {/* --- MAIN GRID (Hero + Sidebar) --- */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
 
-          {/* LEFT COLUMN: THE BIG HERO (Ay'Smart) */}
+          {/* LEFT COLUMN: HERO SECTION */}
           <div className="lg:col-span-2 group cursor-pointer">
-            {/* ADJUSTED: Height reduced from 400px to 350px for balance */}
-            <div className="relative h-[350px] w-full rounded-2xl overflow-hidden mb-4 border border-white/10 group-hover:border-[#00B2FF] transition-all">
-
-              {/* Placeholder Gradient */}
-              <div className="absolute inset-0 bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#00B2FF]/20"></div>
-
-              <div className="absolute bottom-0 left-0 p-8 w-full bg-gradient-to-t from-black via-black/90 to-transparent">
-
-                {/* THE SPONSOR LABEL */}
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="px-2 py-1 bg-yellow-500 text-black text-[10px] font-black uppercase tracking-widest rounded-sm">
-                    Premium Sponsor
-                  </span>
-                  {/* NEW: VISIBLE BRAND NAME WITH GRADIENT */}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00B2FF] to-[#D033FF] font-black text-sm uppercase tracking-wider">
-                    {mainHero.author}
-                  </span>
-                </div>
-
-                <h1 className="text-3xl md:text-4xl font-black leading-tight mb-2 text-white group-hover:text-[#00B2FF] transition-colors">
-                  {mainHero.title}
-                </h1>
-
-                <div className="flex items-center gap-2 text-xs text-slate-300">
-                  <span>Posted just now</span>
-                  <span>•</span>
-                  <span className="text-yellow-400 font-bold">Verified Listing ✅</span>
-                </div>
+            {loading ? (
+              // SKELETON LOADER (While fetching)
+              <div className="h-[350px] w-full bg-white/5 animate-pulse rounded-2xl flex items-center justify-center">
+                <p className="text-slate-500 text-sm">Loading Headlines...</p>
               </div>
-            </div>
+            ) : heroPost ? (
+              // REAL DATA FROM SUPABASE
+              <>
+                <div className="relative h-[350px] w-full rounded-2xl overflow-hidden mb-4 border border-white/10 group-hover:border-[#00B2FF] transition-all">
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#00B2FF]/20"></div>
+                  <div className="absolute bottom-0 left-0 p-8 w-full bg-gradient-to-t from-black via-black/90 to-transparent">
 
-            <p className="text-slate-400 text-lg leading-relaxed mb-4 line-clamp-3">
-              {mainHero.description}
-            </p>
+                    {/* SPONSOR LABEL */}
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="px-2 py-1 bg-yellow-500 text-black text-[10px] font-black uppercase tracking-widest rounded-sm">
+                        Premium Sponsor
+                      </span>
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00B2FF] to-[#D033FF] font-black text-sm uppercase tracking-wider">
+                        {heroPost.author}
+                      </span>
+                    </div>
 
-            <a
-              href={mainHero.link}
-              target="_blank"
-              className="inline-flex items-center text-[#00B2FF] font-bold hover:underline decoration-2 underline-offset-4 text-sm"
-            >
-              View 80 Acres Inventory at {mainHero.author} →
-            </a>
+                    <h1 className="text-3xl md:text-4xl font-black leading-tight mb-2 text-white group-hover:text-[#00B2FF] transition-colors">
+                      {heroPost.title}
+                    </h1>
+
+                    <div className="flex items-center gap-2 text-xs text-slate-300">
+                      <span>Posted just now</span>
+                      <span>•</span>
+                      <span className="text-yellow-400 font-bold">Verified Listing ✅</span>
+                    </div>
+                  </div>
+                </div>
+
+                <p className="text-slate-400 text-lg leading-relaxed mb-4 line-clamp-3">
+                  {heroPost.summary}
+                </p>
+
+                <a
+                  href={heroPost.link}
+                  target="_blank"
+                  className="inline-flex items-center text-[#00B2FF] font-bold hover:underline decoration-2 underline-offset-4 text-sm"
+                >
+                  View Offer at {heroPost.author} →
+                </a>
+              </>
+            ) : (
+              // FALLBACK IF NO DATA
+              <div className="p-10 text-center border border-white/10 rounded-xl">
+                <p className="text-slate-400">No sponsored news available right now.</p>
+              </div>
+            )}
           </div>
 
-          {/* RIGHT COLUMN: TRENDING LIST */}
+          {/* RIGHT COLUMN: TRENDING LIST (Real Data) */}
           <div className="lg:col-span-1 border-l border-white/10 lg:pl-8 flex flex-col gap-6">
             <h3 className="font-black text-xl text-slate-500 uppercase tracking-widest">Trending Now</h3>
 
-            {trendingSide.map((item, i) => (
-              <div key={i} className="group cursor-pointer border-b border-white/5 pb-4 last:border-0">
+            {loading ? (
+              <p className="text-slate-500 text-sm">Updating feed...</p>
+            ) : trendingSide.map((item) => (
+              <div key={item.id} className="group cursor-pointer border-b border-white/5 pb-4 last:border-0">
                 <span className="text-[10px] font-bold text-[#00B2FF] uppercase mb-1 block">
                   {item.category}
                 </span>
@@ -157,10 +195,10 @@ export default function Home() {
               </div>
             ))}
 
-            {/* NATIVE AD SLOT (Text Link) */}
+            {/* NATIVE AD SLOT (Text Link - Keep Static) */}
             <div className="bg-[#1E293B]/50 p-4 rounded-xl border border-yellow-500/20">
               <p className="text-[10px] text-slate-400 uppercase font-bold mb-2">
-                Ad • {mainHero.author}
+                Ad • Ay'Smart Investment Ltd
               </p>
               <a href="https://www.aysmartinvestmentltd.com" target="_blank" className="text-sm font-bold text-white hover:text-yellow-400 transition">
                 Need a car? Swap your old model for a 2026 upgrade today. No hidden fees.
@@ -189,7 +227,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* --- GLOBAL PULSE (Grid) --- */}
+        {/* --- GLOBAL PULSE (Static Grid) --- */}
         <section className="mb-16">
           <div className="flex items-center justify-between mb-6 border-b border-white/10 pb-4">
             <h3 className="text-2xl font-black">Global Pulse</h3>

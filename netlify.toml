@@ -1,23 +1,16 @@
 [build]
   command = "npm run build"
   publish = ".next"
-  functions = "netlify/functions"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
-
-# Redirect admin routes - handled by Next.js middleware
-[[redirects]]
-  from = "/admin/*"
-  to = "/.netlify/functions/next"
-  status = 200
-  force = false
 
 # Cache configuration
 [cache]
   # Next.js static assets
   [[cache.assets]]
     pattern = "/**/*.{js,css,png,jpg,jpeg,svg,gif,webp,woff,woff2,ttf,eot,otf}"
+    expires = "31556952s"
     expires = "31556952s"
 
 # Environment variables for Netlify UI

@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
+export const dynamic = "force-dynamic";
+
 export default function AdminPublisher() {
   const router = useRouter();
   const [post, setPost] = useState({
@@ -18,18 +20,15 @@ export default function AdminPublisher() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  // Check authentication on mount
   useEffect(() => {
     const checkAuth = async () => {
       const token = document.cookie
         .split('; ')
         .find(row => row.startsWith('admin_session='));
-      
       if (!token) {
         router.push("/admin/login");
       }
     };
-
     checkAuth();
   }, [router]);
 
@@ -57,8 +56,7 @@ export default function AdminPublisher() {
       if (error) {
         setMessage("❌ Error: " + error.message);
       } else {
-        setMessage("✅ Post published successfully! Check homepage.");
-        // Reset form
+        setMessage("✅ Post published successfully!");
         setPost({
           title: "", 
           category: "Politics", 
@@ -72,9 +70,8 @@ export default function AdminPublisher() {
         setTimeout(() => setMessage(""), 5000);
       }
     } catch (err) {
-      setMessage("❌ Publishing failed. Please try again.");
+      setMessage("❌ Publishing failed.");
     }
-
     setLoading(false);
   };
 
@@ -86,39 +83,36 @@ export default function AdminPublisher() {
             <h1 className="text-3xl font-black italic tracking-tighter">
               BEACON<span className="text-blue-500">PRESS</span>
             </h1>
-            <p className="text-xs text-slate-400 uppercase tracking-widest font-bold">🚀 Admin Publisher</p>
+            <p className="text-xs text-slate-400 uppercase tracking-widest font-bold">Admin Publisher</p>
           </div>
           <button
             onClick={handleLogout}
             className="px-6 py-3 bg-red-600 hover:bg-red-500 rounded-xl font-bold text-sm uppercase transition"
           >
-            🚪 Logout
+            Logout
           </button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* FORM SECTION */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2">
             <div className="bg-slate-900 p-10 rounded-2xl border border-white/5 shadow-2xl">
               <div className="space-y-6">
-                {/* TITLE */}
                 <div>
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block">
-                    📰 Headline (Required)
+                    Headline (Required)
                   </label>
                   <input 
                     type="text" 
-                    placeholder="Breaking news, analysis, or feature..." 
+                    placeholder="Breaking news..." 
                     value={post.title}
                     onChange={(e) => setPost({ ...post, title: e.target.value })}
                     className="w-full bg-black/40 p-4 rounded-xl border border-white/5 outline-none focus:border-blue-500 text-white placeholder:text-slate-600 transition"
                   />
                 </div>
 
-                {/* CATEGORY */}
                 <div>
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block">
-                    🏷️ Category
+                    Category
                   </label>
                   <select 
                     value={post.category}
@@ -134,10 +128,9 @@ export default function AdminPublisher() {
                   </select>
                 </div>
 
-                {/* SUMMARY */}
                 <div>
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block">
-                    ✍️ Summary (Optional)
+                    Summary (Optional)
                   </label>
                   <input 
                     type="text" 
@@ -150,10 +143,9 @@ export default function AdminPublisher() {
                   <p className="text-[10px] text-slate-500 mt-1">{post.summary.length}/150 chars</p>
                 </div>
 
-                {/* IMAGE */}
                 <div>
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block">
-                    🖼️ Featured Image (Optional)
+                    Featured Image (Optional)
                   </label>
                   <input 
                     type="text" 
@@ -167,20 +159,16 @@ export default function AdminPublisher() {
                       src={post.image_url}
                       alt="Preview"
                       className="w-full h-48 object-cover rounded-xl border border-white/10 mt-3"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23333" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" font-size="20" fill="%23999" text-anchor="middle" dy=".3em"%3EImage Failed%3C/text%3E%3C/svg%3E';
-                      }}
                     />
                   )}
                 </div>
 
-                {/* CONTENT */}
                 <div>
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block">
-                    📄 Content (Required)
+                    Content (Required)
                   </label>
                   <textarea 
-                    placeholder="Write your story here..." 
+                    placeholder="Write your story..." 
                     value={post.content}
                     onChange={(e) => setPost({ ...post, content: e.target.value })}
                     className="w-full bg-black/40 p-4 rounded-xl border border-white/5 outline-none focus:border-blue-500 text-white placeholder:text-slate-600 h-48 resize-none transition"
@@ -188,10 +176,9 @@ export default function AdminPublisher() {
                   <p className="text-[10px] text-slate-500 mt-1">{post.content.length} characters</p>
                 </div>
 
-                {/* LINK */}
                 <div>
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block">
-                    🔗 Link (Optional)
+                    Read More Link (Optional)
                   </label>
                   <input 
                     type="url" 
@@ -202,7 +189,6 @@ export default function AdminPublisher() {
                   />
                 </div>
 
-                {/* SPONSORED */}
                 <div className="p-4 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl border border-white/5">
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input 
@@ -212,12 +198,11 @@ export default function AdminPublisher() {
                       className="w-5 h-5 rounded"
                     />
                     <span className="text-xs font-black text-slate-300 uppercase">
-                      💎 Premium Sponsor
+                      Premium Sponsor
                     </span>
                   </label>
                 </div>
 
-                {/* MESSAGE */}
                 {message && (
                   <div
                     className={`p-4 rounded-xl text-center font-bold text-sm ${
@@ -230,35 +215,31 @@ export default function AdminPublisher() {
                   </div>
                 )}
 
-                {/* PUBLISH */}
                 <button 
                   onClick={handlePublish}
                   disabled={loading}
-                  className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 py-6 rounded-xl font-black text-sm uppercase tracking-widest transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-900/30"
+                  className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 py-6 rounded-xl font-black text-sm uppercase tracking-widest transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {loading ? "⏳ PUBLISHING..." : "🚀 PUBLISH TO HUB →"}
+                  {loading ? "Publishing..." : "Publish to Hub"}
                 </button>
               </div>
             </div>
           </div>
 
-          {/* INFO SECTION */}
           <div className="space-y-6">
-            {/* TIPS */}
             <div className="bg-slate-900 p-6 rounded-2xl border border-white/5">
-              <h3 className="text-sm font-black uppercase tracking-widest text-blue-400 mb-4">💡 Tips</h3>
+              <h3 className="text-sm font-black uppercase tracking-widest text-blue-400 mb-4">Tips</h3>
               <ul className="text-xs text-slate-400 space-y-3">
-                <li>✅ Clear, engaging headlines</li>
-                <li>✅ 1200x630px images</li>
-                <li>✅ Summaries &lt;150 chars</li>
-                <li>✅ Mark sponsor posts</li>
-                <li>✅ Posts appear instantly</li>
+                <li>Use clear headlines</li>
+                <li>1200x630px images</li>
+                <li>Keep summary under 150 chars</li>
+                <li>Mark sponsor posts</li>
+                <li>Posts appear instantly</li>
               </ul>
             </div>
 
-            {/* STATUS */}
             <div className="bg-slate-900 p-6 rounded-2xl border border-white/5">
-              <h3 className="text-sm font-black uppercase tracking-widest text-blue-400 mb-4">📊 Status</h3>
+              <h3 className="text-sm font-black uppercase tracking-widest text-blue-400 mb-4">Status</h3>
               <div className="space-y-3 text-xs">
                 <div className="flex justify-between">
                   <span className="text-slate-400">Published</span>
@@ -268,19 +249,12 @@ export default function AdminPublisher() {
                   <span className="text-slate-400">Sponsored</span>
                   <span className="font-black">--</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-400">Today Views</span>
-                  <span className="font-black">--</span>
-                </div>
               </div>
             </div>
 
-            {/* SECURITY */}
             <div className="bg-red-500/5 p-4 rounded-xl border border-red-500/20">
-              <p className="text-[10px] font-black text-red-400 uppercase mb-2">🔐 Security</p>
-              <p className="text-[10px] text-red-300/70">
-                Session expires in 24h.
-              </p>
+              <p className="text-[10px] font-black text-red-400 uppercase mb-2">Security</p>
+              <p className="text-[10px] text-red-300/70">Session expires in 24h</p>
             </div>
           </div>
         </div>

@@ -21,6 +21,7 @@
 ## 🚀 QUICK START (5 MINUTES)
 
 ### **Step 1: Set Up Environment Variables**
+
 ```bash
 # Copy the example file
 cp .env.local.example .env.local
@@ -29,6 +30,7 @@ cp .env.local.example .env.local
 ```
 
 ### **Step 2: Test the Setup**
+
 ```bash
 # In your terminal, from beacon-press-hub directory:
 npm run dev
@@ -38,13 +40,16 @@ npm run dev
 ```
 
 ### **Step 3: Login with Test Credentials**
+
 ```
 Email:    admin@beaconpress.com
 Password: Beacon123!@#
 ```
 
 ### **Step 4: Publish Your First Post**
+
 Once logged in, you'll see the admin publisher page. Fill out:
+
 - Headline (required)
 - Category
 - Content (required)
@@ -107,6 +112,7 @@ beacon-press-hub/
 ## 📋 WORKFLOW CHECKLIST
 
 **To publish a post:**
+
 - [ ] Navigate to `/admin/login`
 - [ ] Enter test credentials
 - [ ] See publisher dashboard
@@ -148,6 +154,7 @@ Post appears on homepage
 ## ⚠️ KNOWN LIMITATIONS (MVP)
 
 ### **Current (MVP - Working):**
+
 ✅ Admin login with hardcoded credentials
 ✅ Session management (24-hour timeout)
 ✅ Route protection via middleware
@@ -156,6 +163,7 @@ Post appears on homepage
 ✅ Instant database insertion
 
 ### **Not Yet Implemented (TODO):**
+
 ❌ User role management
 ❌ Post editing/deletion
 ❌ Marketplace moderation
@@ -169,17 +177,20 @@ Post appears on homepage
 ## 🔧 CONFIGURATION
 
 ### **Test Credentials (Change in Production!)**
+
 ```
 Email: admin@beaconpress.com
 Password: Beacon123!@#
 ```
 
 ### **Session Duration**
+
 - Default: 24 hours
 - Set in: `src/app/admin/login/page.tsx` line 28
 - Cookie name: `admin_session`
 
 ### **Session Check Interval**
+
 - Real-time (checked on page load)
 - In: `src/app/admin/publisher/page.tsx` lines 19-33
 
@@ -188,17 +199,20 @@ Password: Beacon123!@#
 ## 🚀 NEXT STEPS (PHASE 2)
 
 ### **Immediate (Today):**
+
 1. ✅ Test the login flow
 2. ✅ Publish a test post
 3. ✅ Verify it appears on homepage
 
 ### **Short Term (This Week):**
+
 1. Add post editing capability
 2. Add post deletion capability
 3. Add post analytics
 4. Improve error handling
 
 ### **Medium Term (Next Week):**
+
 1. Integrate Supabase Auth (replace hardcoded)
 2. Add role-based access control
 3. Add marketplace moderation
@@ -206,6 +220,7 @@ Password: Beacon123!@#
 5. Setup email notifications
 
 ### **Long Term (Next Month):**
+
 1. Advanced analytics dashboard
 2. Bulk post operations
 3. Post scheduling
@@ -217,22 +232,28 @@ Password: Beacon123!@#
 ## 🐛 TROUBLESHOOTING
 
 ### **Issue: "Cannot GET /admin/login"**
+
 **Solution:** Make sure you're running `npm run dev` and the file exists at `src/app/admin/login/page.tsx`
 
 ### **Issue: Login page appears but login doesn't work**
+
 **Solution:** Check that:
+
 - Email matches: `admin@beaconpress.com`
 - Password matches: `Beacon123!@#`
 - Check browser console for errors (F12)
 
 ### **Issue: Published post doesn't appear on homepage**
+
 **Solution:**
+
 - Check Supabase connection in `.env.local`
 - Verify post has title and content
 - Check browser console for errors
 - Refresh the homepage
 
 ### **Issue: Session expires immediately**
+
 **Solution:** Check that middleware is active and cookies are enabled in browser
 
 ---
@@ -240,12 +261,14 @@ Password: Beacon123!@#
 ## 📊 TESTING CHECKLIST
 
 **Login Flow:**
+
 - [ ] Access `/admin/login` without cookies
 - [ ] Wrong password shows error
 - [ ] Correct credentials redirect to publisher
 - [ ] Direct `/admin/publisher` without auth redirects to login
 
 **Publishing:**
+
 - [ ] Missing title shows error
 - [ ] Missing content shows error
 - [ ] Valid post publishes successfully
@@ -253,6 +276,7 @@ Password: Beacon123!@#
 - [ ] Success message appears
 
 **Security:**
+
 - [ ] Cannot access `/admin/*` without login
 - [ ] Logout clears session
 - [ ] Session expires after 24 hours
@@ -262,17 +286,22 @@ Password: Beacon123!@#
 ## 🎓 KEY FILES EXPLAINED
 
 ### **middleware.ts**
+
 Protects all `/admin` routes by checking for valid session token.
 
 ### **src/app/admin/login/page.tsx**
+
 Beautiful login UI with hardcoded credentials (MVP).
 Credentials can be changed in the `handleLogin` function.
 
 ### **src/lib/auth.ts**
+
 Authentication helper functions. Ready to integrate Supabase Auth.
 
 ### **src/app/admin/publisher/page.tsx**
+
 Full admin dashboard with:
+
 - Enhanced form with better UX
 - Image preview
 - Category selection
@@ -300,6 +329,7 @@ AFTER THIS IMPLEMENTATION:
 ```
 
 **What's still needed:**
+
 - Supabase Auth integration (replaces hardcoded)
 - Post editing/deletion
 - Marketplace moderation
@@ -310,6 +340,7 @@ AFTER THIS IMPLEMENTATION:
 ## 🎯 PRODUCTION CHECKLIST
 
 Before deploying to production:
+
 - [ ] Change hardcoded credentials in auth.ts
 - [ ] Implement Supabase Auth (not hardcoded)
 - [ ] Add input sanitization
@@ -326,6 +357,7 @@ Before deploying to production:
 ## 📞 SUPPORT
 
 **Questions about specific files?**
+
 - Middleware: See `src/middleware.ts` comments
 - Login: See `src/app/admin/login/page.tsx` comments
 - Auth: See `src/lib/auth.ts` comments
@@ -333,6 +365,7 @@ Before deploying to production:
 
 **Need to change credentials?**
 Edit in `src/app/admin/login/page.tsx` lines 19-20:
+
 ```typescript
 const ADMIN_EMAIL = "admin@beaconpress.com";
 const ADMIN_PASSWORD = "Beacon123!@#";
@@ -357,6 +390,7 @@ const ADMIN_PASSWORD = "Beacon123!@#";
 ## 🎊 YOU NOW HAVE
 
 A fully functional admin system where you can:
+
 1. ✅ Log in securely
 2. ✅ Create posts with images
 3. ✅ Flag sponsor content
@@ -369,6 +403,6 @@ A fully functional admin system where you can:
 
 **Implementation Status:** ✅ COMPLETE
 **Ready to Use:** YES
-**Test It:** http://localhost:3000/admin/login
+**Test It:** <http://localhost:3000/admin/login>
 
 Enjoy your new admin panel!

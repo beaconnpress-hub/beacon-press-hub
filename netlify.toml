@@ -11,7 +11,6 @@
   [[cache.assets]]
     pattern = "/**/*.{js,css,png,jpg,jpeg,svg,gif,webp,woff,woff2,ttf,eot,otf}"
     expires = "31556952s"
-    expires = "31556952s"
 
 # Environment variables for Netlify UI
 # Note: These should be set in Netlify Dashboard > Site Settings > Build & deploy > Environment

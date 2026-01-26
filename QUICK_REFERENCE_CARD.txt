@@ -1,0 +1,146 @@
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                          📋 QUICK REFERENCE CARD                          ║
+║               Beacon Press Hub - Complete Setup Summary                   ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+7 DATABASE TABLES YOU NEED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ posts             → News articles
+✅ fliers            → Real estate marketing fliers
+✅ admin_users       → Admin user management
+✅ audit_log         → Track admin actions
+✅ contacts          → Contact form submissions
+✅ analytics         → User behavior tracking
+✅ properties        → Real estate listings
+
+👉 Run SUPABASE_SCHEMA.sql in Supabase SQL Editor to create all tables
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ENVIRONMENT VARIABLES YOU NEED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+NEXTAUTH Configuration:
+  NEXTAUTH_URL = http://localhost:3000 (local) OR your Netlify URL
+  NEXTAUTH_SECRET = (run: openssl rand -base64 32)
+
+Supabase Configuration:
+  NEXT_PUBLIC_SUPABASE_URL = https://your-project.supabase.co
+  NEXT_PUBLIC_SUPABASE_ANON_KEY = (from Supabase dashboard)
+  SUPABASE_SERVICE_ROLE_KEY = (from Supabase dashboard)
+
+Analytics Configuration:
+  NEXT_PUBLIC_ANALYTICS_ID = G-XXXXXXXXXX (from Google Analytics)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+HOW TO ACCESS FLIER GENERATOR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+LOCAL (Development):
+  1. npm run dev
+  2. http://localhost:3000/admin/login
+  3. Email: admin@beaconpress.com
+  4. Password: Beacon123!@#
+  5. Click: 🎨 Flier Generator
+
+NETLIFY (Production):
+  1. https://beacon-press-hub-news.netlify.app/admin/login
+  2. Same credentials
+  3. Click: 🎨 Flier Generator
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+NEXTAUTH_SECRET GENERATOR COMMANDS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Windows PowerShell:
+  python -c "import secrets; print(secrets.token_urlsafe(32))"
+
+Linux/Mac/WSL:
+  openssl rand -base64 32
+
+Online:
+  https://generate-secret.vercel.app/32
+
+Node.js:
+  node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SUPABASE KEYS LOCATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. https://supabase.com/dashboard
+2. Select your project
+3. Settings → API
+4. Find: Project URL, Anon Public Key, Service Role Key
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ALL PAGES & URLS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+LOCAL (http://localhost:3000):
+  / → Homepage
+  /admin/login → Admin login
+  /admin/publisher → News publisher
+  /admin/flier-generator → Flier generator
+
+NETLIFY (https://beacon-press-hub-news.netlify.app):
+  / → Homepage
+  /admin/login → Admin login
+  /admin/publisher → News publisher
+  /admin/flier-generator → Flier generator
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FLIER EXPORT FORMATS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📱 Instagram Story   → 1080 × 1920 px
+📱 Instagram Feed    → 1080 × 1080 px
+👍 Facebook          → 1200 × 628 px
+💬 WhatsApp          → 1080 × 1920 px
+🖥️  Digital Display   → 1920 × 1080 px
+🖨️  Print Ready       → 1024 × 1280 px (300dpi)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+GIT WORKFLOW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Make changes locally:
+  git add .
+  git commit -m "Your message"
+  git push origin master
+
+Netlify auto-deploys when you push to master ✅
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DOCUMENTATION FILES IN PROJECT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. COMPLETE_SETUP_GUIDE.txt ← START HERE (this file)
+2. SUPABASE_SCHEMA.sql ← Copy to Supabase
+3. ENV_SETUP_GUIDE.md ← Detailed env var setup
+4. URLS_CREDENTIALS_REFERENCE.txt ← Quick access guide
+5. QUICK_START_FLIER.md ← Quick flier reference
+6. FLIER_GENERATOR_GUIDE.md ← Detailed flier guide
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ONE-TIME SETUP CHECKLIST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+□ 1. Create .env.local file
+□ 2. Generate NEXTAUTH_SECRET (command above)
+□ 3. Get Supabase keys (supabase.com/dashboard)
+□ 4. Get Google Analytics ID (analytics.google.com)
+□ 5. Add all variables to .env.local
+□ 6. Run SUPABASE_SCHEMA.sql in Supabase
+□ 7. Run: npm install
+□ 8. Run: npm run dev
+□ 9. Test login at http://localhost:3000/admin/login
+□ 10. Test flier generator at http://localhost:3000/admin/flier-generator
+□ 11. Add environment variables to Netlify Dashboard
+□ 12. Git push origin master (triggers Netlify deploy)
+□ 13. Verify production at netlify URL
+
+All set! ✅
+
+═══════════════════════════════════════════════════════════════════════════════

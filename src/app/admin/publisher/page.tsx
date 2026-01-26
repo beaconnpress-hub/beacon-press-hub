@@ -11,7 +11,6 @@ export default function AdminPublisher() {
     title: "", 
     category: "Politics", 
     summary: "", 
-    content: "",
     image_url: "", 
     author: "Beacon Admin", 
     is_sponsored: false,
@@ -38,8 +37,8 @@ export default function AdminPublisher() {
   };
 
   const handlePublish = async () => {
-    if (!post.title || !post.content) {
-      setMessage("❌ Title and content are required!");
+    if (!post.title || !post.summary) {
+      setMessage("❌ Title and summary are required!");
       return;
     }
 
@@ -47,11 +46,19 @@ export default function AdminPublisher() {
     setMessage("");
 
     try {
-      const { error } = await supabase.from('posts').insert([{
-        ...post,
+      // Only send fields that exist in the schema
+      const postData = {
+        title: post.title,
+        category: post.category,
+        summary: post.summary,
+        image_url: post.image_url,
+        author: post.author,
+        is_sponsored: post.is_sponsored,
+        link: post.link,
         created_at: new Date().toISOString(),
-        expires_at: null
-      }]);
+      };
+
+      const { error } = await supabase.from('posts').insert([postData]);
 
       if (error) {
         setMessage("❌ Error: " + error.message);
@@ -61,7 +68,6 @@ export default function AdminPublisher() {
           title: "", 
           category: "Politics", 
           summary: "", 
-          content: "",
           image_url: "", 
           author: "Beacon Admin", 
           is_sponsored: false,
@@ -179,15 +185,15 @@ export default function AdminPublisher() {
 
                 <div>
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block">
-                    Content (Required)
+                    Summary (Required)
                   </label>
                   <textarea 
-                    placeholder="Write your story..." 
-                    value={post.content}
-                    onChange={(e) => setPost({ ...post, content: e.target.value })}
+                    placeholder="Write article summary or story..." 
+                    value={post.summary}
+                    onChange={(e) => setPost({ ...post, summary: e.target.value })}
                     className="w-full bg-black/40 p-4 rounded-xl border border-white/5 outline-none focus:border-blue-500 text-white placeholder:text-slate-600 h-48 resize-none transition"
                   />
-                  <p className="text-[10px] text-slate-500 mt-1">{post.content.length} characters</p>
+                  <p className="text-[10px] text-slate-500 mt-1">{post.summary.length} characters</p>
                 </div>
 
                 <div>

@@ -1,6 +1,30 @@
 [build]
   command = "npm run build"
   publish = ".next"
+  functions = "netlify/functions"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+# Redirect admin routes - handled by Next.js middleware
+[[redirects]]
+  from = "/admin/*"
+  to = "/.netlify/functions/next"
+  status = 200
+  force = false
+
+# Cache configuration
+[cache]
+  # Next.js static assets
+  [[cache.assets]]
+    pattern = "/**/*.{js,css,png,jpg,jpeg,svg,gif,webp,woff,woff2,ttf,eot,otf}"
+    expires = "31556952s"
+
+# Environment variables for Netlify UI
+# Note: These should be set in Netlify Dashboard > Site Settings > Build & deploy > Environment
+[context.production.environment]
+  # Admin credentials - MUST be set in Netlify Dashboard before deployment
+  # NEXT_PUBLIC_ADMIN_EMAIL = "admin@beaconpress.com"
+  # NEXT_PUBLIC_ADMIN_PASSWORD = "Beacon123!@#"
+  # NEXT_PUBLIC_SUPABASE_URL = ""
+  # NEXT_PUBLIC_SUPABASE_ANON_KEY = ""

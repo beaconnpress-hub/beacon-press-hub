@@ -83,7 +83,21 @@ export default function AdminPublisher() {
             <h1 className="text-3xl font-black italic tracking-tighter">
               BEACON<span className="text-blue-500">PRESS</span>
             </h1>
-            <p className="text-xs text-slate-400 uppercase tracking-widest font-bold">Admin Publisher</p>
+            <p className="text-xs text-slate-400 uppercase tracking-widest font-bold">Admin Dashboard</p>
+            <div className="flex gap-4 mt-3">
+              <a 
+                href="/admin/publisher" 
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg font-bold text-sm uppercase transition"
+              >
+                📝 Publisher
+              </a>
+              <a 
+                href="/admin/flier-generator" 
+                className="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-lg font-bold text-sm uppercase transition"
+              >
+                🎨 Flier Generator
+              </a>
+            </div>
           </div>
           <button
             onClick={handleLogout}

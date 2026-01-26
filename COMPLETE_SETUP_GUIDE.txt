@@ -1,0 +1,394 @@
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║           ✅ COMPLETE SETUP GUIDE - SUPABASE & ENVIRONMENT VARS          ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 SUPABASE TABLES TO CREATE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ TABLE 1: posts                                                          │
+├─────────────────────────────────────────────────────────────────────────┤
+│ Purpose: News articles, press releases, blog posts                      │
+│ Fields:                                                                  │
+│  • id (UUID, Primary Key)                                              │
+│  • title (VARCHAR 255)                                                 │
+│  • category (VARCHAR 100) - Politics, Tech, Real Estate, etc           │
+│  • summary (VARCHAR 500) - Article preview                             │
+│  • image_url (VARCHAR 500) - Featured image                            │
+│  • author (VARCHAR 255)                                                │
+│  • is_sponsored (BOOLEAN)                                              │
+│  • link (VARCHAR 500) - Read more link                                 │
+│  • created_at (TIMESTAMP)                                              │
+│  • updated_at (TIMESTAMP)                                              │
+└─────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ TABLE 2: fliers                                                         │
+├─────────────────────────────────────────────────────────────────────────┤
+│ Purpose: Real estate marketing fliers                                   │
+│ Fields:                                                                  │
+│  • id (UUID, Primary Key)                                              │
+│  • title (VARCHAR 255) - Project name                                  │
+│  • location (VARCHAR 255) - Property location                          │
+│  • size (VARCHAR 100) - Plot size (e.g., "500 sqm")                   │
+│  • price_per_plot (VARCHAR 100) - e.g., "₦15,000,000"                │
+│  • price_per_acre (VARCHAR 100) - e.g., "₦3,000,000"                 │
+│  • title_type (VARCHAR 255) - Certified Survey, etc                    │
+│  • highlights (TEXT[]) - Array of benefits                             │
+│  • image_url (VARCHAR 500) - Hero image                                │
+│  • phone (VARCHAR 20)                                                  │
+│  • whatsapp (VARCHAR 20)                                               │
+│  • email (VARCHAR 255)                                                 │
+│  • format (VARCHAR 50) - instagram-story, facebook, etc                │
+│  • created_by (UUID) - Link to admin_users                             │
+│  • created_at (TIMESTAMP)                                              │
+│  • updated_at (TIMESTAMP)                                              │
+└─────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ TABLE 3: admin_users                                                    │
+├─────────────────────────────────────────────────────────────────────────┤
+│ Purpose: Admin access control & user management                        │
+│ Fields:                                                                  │
+│  • id (UUID, Primary Key)                                              │
+│  • user_id (UUID) - Link to auth.users (Supabase Auth)                │
+│  • email (VARCHAR 255, UNIQUE)                                        │
+│  • full_name (VARCHAR 255)                                            │
+│  • role (VARCHAR 50) - admin, super_admin, moderator                  │
+│  • is_active (BOOLEAN)                                                │
+│  • last_login (TIMESTAMP)                                             │
+│  • created_at (TIMESTAMP)                                             │
+│  • updated_at (TIMESTAMP)                                             │
+└─────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ TABLE 4: audit_log                                                      │
+├─────────────────────────────────────────────────────────────────────────┤
+│ Purpose: Track all admin actions (security & compliance)               │
+│ Fields:                                                                  │
+│  • id (UUID, Primary Key)                                              │
+│  • admin_id (UUID) - Which admin made the action                      │
+│  • action (VARCHAR 100) - INSERT, UPDATE, DELETE, PUBLISH             │
+│  • table_name (VARCHAR 100) - posts, fliers, etc                      │
+│  • record_id (UUID) - Which record was affected                       │
+│  • old_data (JSONB) - Previous values                                 │
+│  • new_data (JSONB) - New values                                      │
+│  • ip_address (VARCHAR 45)                                             │
+│  • user_agent (TEXT) - Browser info                                   │
+│  • created_at (TIMESTAMP)                                              │
+└─────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ TABLE 5: contacts                                                       │
+├─────────────────────────────────────────────────────────────────────────┤
+│ Purpose: Contact form submissions & inquiries                          │
+│ Fields:                                                                  │
+│  • id (UUID, Primary Key)                                              │
+│  • name (VARCHAR 255)                                                  │
+│  • email (VARCHAR 255)                                                 │
+│  • phone (VARCHAR 20)                                                  │
+│  • subject (VARCHAR 255)                                               │
+│  • message (TEXT)                                                      │
+│  • flier_id (UUID) - Link to flier if inquiry is about a property     │
+│  • status (VARCHAR 50) - new, replied, closed                         │
+│  • created_at (TIMESTAMP)                                              │
+│  • updated_at (TIMESTAMP)                                              │
+└─────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ TABLE 6: analytics                                                      │
+├─────────────────────────────────────────────────────────────────────────┤
+│ Purpose: Track user behavior, page views, events                       │
+│ Fields:                                                                  │
+│  • id (UUID, Primary Key)                                              │
+│  • session_id (VARCHAR 255) - Track user sessions                      │
+│  • event_name (VARCHAR 100) - page_view, button_click, download       │
+│  • event_type (VARCHAR 50) - page, interaction, conversion            │
+│  • page_url (VARCHAR 500) - Which page was visited                     │
+│  • referrer (VARCHAR 500) - Where user came from                      │
+│  • user_agent (TEXT) - Browser, OS info                               │
+│  • ip_address (VARCHAR 45)                                             │
+│  • country (VARCHAR 100)                                               │
+│  • city (VARCHAR 100)                                                  │
+│  • device_type (VARCHAR 50) - desktop, mobile, tablet                 │
+│  • os_name (VARCHAR 100) - Windows, iOS, Android                      │
+│  • browser_name (VARCHAR 100) - Chrome, Firefox, Safari               │
+│  • properties (JSONB) - Custom event data                             │
+│  • created_at (TIMESTAMP)                                              │
+└─────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ TABLE 7: properties                                                     │
+├─────────────────────────────────────────────────────────────────────────┤
+│ Purpose: Real estate listings (for future property management)        │
+│ Fields:                                                                  │
+│  • id (UUID, Primary Key)                                              │
+│  • title (VARCHAR 255) - Property name                                 │
+│  • description (TEXT) - Full description                               │
+│  • location (VARCHAR 255)                                              │
+│  • size (DECIMAL)                                                      │
+│  • size_unit (VARCHAR 20) - sqm, acres, hectares                       │
+│  • price (DECIMAL)                                                     │
+│  • currency (VARCHAR 10) - NGN, USD, etc                               │
+│  • image_url (VARCHAR 500) - Main image                                │
+│  • images_urls (VARCHAR[]) - Array of more images                      │
+│  • property_type (VARCHAR 100) - Residential, Commercial, etc         │
+│  • status (VARCHAR 50) - available, sold, pending                     │
+│  • created_by (UUID) - Link to admin_users                             │
+│  • created_at (TIMESTAMP)                                              │
+│  • updated_at (TIMESTAMP)                                              │
+└─────────────────────────────────────────────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔧 HOW TO CREATE TABLES IN SUPABASE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Go to: https://supabase.com/dashboard
+2. Select your project
+3. Click: SQL Editor (left sidebar)
+4. Click: + New Query
+5. Copy entire content from: SUPABASE_SCHEMA.sql
+6. Paste into SQL Editor
+7. Click: Run
+8. Wait for completion
+9. Check: Table Editor shows all 7 tables
+
+✅ All tables created with:
+   - Proper indexes for performance
+   - Row-Level Security enabled
+   - Timestamps for audit trails
+   - UUID primary keys for security
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔐 ENVIRONMENT VARIABLES - WHAT EACH DOES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. NEXTAUTH_URL
+   ├─ What: Your application URL
+   ├─ Local Value: http://localhost:3000
+   ├─ Production Value: https://beacon-press-hub-news.netlify.app
+   └─ Purpose: NextAuth knows which domain to authenticate against
+
+2. NEXTAUTH_SECRET
+   ├─ What: Encryption key for NextAuth sessions
+   ├─ Generate: openssl rand -base64 32
+   ├─ Must be SAME on local and Netlify
+   └─ Purpose: Secure session cookies, prevent forgery
+
+3. NEXT_PUBLIC_SUPABASE_URL
+   ├─ What: Your Supabase project URL
+   ├─ Get from: supabase.com/dashboard → Settings → API → Project URL
+   ├─ Example: https://xyzsomething.supabase.co
+   └─ Purpose: Connect to your database
+
+4. NEXT_PUBLIC_SUPABASE_ANON_KEY
+   ├─ What: Public key for client-side database access
+   ├─ Get from: supabase.com/dashboard → Settings → API → Anon Public Key
+   ├─ OK to expose (client-side use)
+   └─ Purpose: Authenticate database queries from frontend
+
+5. SUPABASE_SERVICE_ROLE_KEY
+   ├─ What: Secret key for server-side admin access
+   ├─ Get from: supabase.com/dashboard → Settings → API → Service Role Key
+   ├─ NEVER expose publicly (server-side only)
+   └─ Purpose: Admin operations, bypass RLS policies
+
+6. NEXT_PUBLIC_ANALYTICS_ID
+   ├─ What: Analytics service tracking ID
+   ├─ Options:
+   │   ├─ Google Analytics: G-XXXXXXXXXX
+   │   ├─ Mixpanel: project-token
+   │   ├─ Plausible: yourdomain.com
+   │   └─ Vercel Analytics: id
+   ├─ Get from: Your analytics provider dashboard
+   └─ Purpose: Track user behavior, page views, events
+
+7. NEXT_PUBLIC_ADMIN_EMAIL / NEXT_PUBLIC_ADMIN_PASSWORD
+   ├─ What: Development credentials (hardcoded, MVP only)
+   ├─ Values: admin@beaconpress.com / Beacon123!@#
+   ├─ For: Easy testing during development
+   └─ Note: Replace with Supabase Auth in production
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📝 COMPLETE .env.local TEMPLATE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Copy this entire block into .env.local file
+
+# NextAuth Configuration
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your-generated-secret-here
+
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+
+# Analytics Configuration
+NEXT_PUBLIC_ANALYTICS_ID=G-XXXXXXXXXX
+
+# Admin Credentials (Development Only)
+NEXT_PUBLIC_ADMIN_EMAIL=admin@beaconpress.com
+NEXT_PUBLIC_ADMIN_PASSWORD=Beacon123!@#
+
+# Company Information
+NEXT_PUBLIC_COMPANY_NAME=AY'SMART INVESTMENT LTD
+NEXT_PUBLIC_COMPANY_PHONE=+234 813 627 2360
+NEXT_PUBLIC_COMPANY_EMAIL=admin@ayinvestmentltd.com
+NEXT_PUBLIC_COMPANY_WHATSAPP=+234 813 627 2360
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔑 GENERATE NEXTAUTH_SECRET
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Option 1: Using OpenSSL (Linux/Mac/PowerShell)
+  Command: openssl rand -base64 32
+  Output: a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6==
+
+Option 2: Online Generator
+  Visit: https://generate-secret.vercel.app/32
+  Copy the generated secret
+
+Option 3: Using Node.js
+  Command: node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+
+Then paste the output as NEXTAUTH_SECRET value in .env.local
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚀 HOW TO GET SUPABASE KEYS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Go to: https://supabase.com/dashboard
+2. Click your project
+3. Click Settings (gear icon, bottom left)
+4. Click API (left menu)
+5. You'll see three keys:
+
+   ┌─────────────────────────────────────────────────────────┐
+   │ Project URL: https://xxxxx.supabase.co                  │
+   │ Anon Public: eyJhbGc... (copy this)                     │
+   │ Service Role: eyJhbGc... (SECRET! copy carefully)       │
+   └─────────────────────────────────────────────────────────┘
+
+6. Copy each into .env.local:
+   NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGc...
+   SUPABASE_SERVICE_ROLE_KEY=eyJhbGc...
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 SETUP GOOGLE ANALYTICS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Go to: https://analytics.google.com
+2. Click "Start measuring" (or Sign In)
+3. Create new property:
+   ├─ Property name: Beacon Press Hub
+   ├─ Timezone: Select your timezone
+   ├─ Currency: NGN (Nigerian Naira)
+   └─ Click Create
+4. Create data stream:
+   ├─ Choose: Web
+   ├─ Website URL: http://localhost:3000 (for testing)
+   ├─ Stream name: Beacon Press Hub
+   └─ Click Create stream
+5. Google will show your Measurement ID (starts with G-)
+6. Copy and paste into .env.local:
+   NEXT_PUBLIC_ANALYTICS_ID=G-XXXXXXXXXX
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 ACCESS FLIER GENERATOR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+LOCAL (Development):
+  1. Run: npm run dev
+  2. Go to: http://localhost:3000/admin/login
+  3. Email: admin@beaconpress.com
+  4. Password: Beacon123!@#
+  5. Click: Login
+  6. Click: 🎨 Flier Generator
+  7. Fill property details
+  8. Download flier as PNG
+
+NETLIFY (Production):
+  1. Push to master: git push origin master
+  2. Netlify auto-deploys
+  3. Go to: https://beacon-press-hub-news.netlify.app/admin/login
+  4. Same credentials
+  5. Click: 🎨 Flier Generator
+  6. Create and download fliers
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 NETLIFY ENVIRONMENT VARIABLES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Go to: https://app.netlify.com
+2. Select your site: beacon-press-hub-news
+3. Site Settings → Build & Deploy → Environment
+4. Add "Environment variables":
+
+   ┌─────────────────────────────────────────────────────────┐
+   │ NEXTAUTH_URL                                            │
+   │ https://beacon-press-hub-news.netlify.app              │
+   ├─────────────────────────────────────────────────────────┤
+   │ NEXTAUTH_SECRET                                         │
+   │ (same as local)                                         │
+   ├─────────────────────────────────────────────────────────┤
+   │ NEXT_PUBLIC_SUPABASE_URL                               │
+   │ https://xxxxx.supabase.co                              │
+   ├─────────────────────────────────────────────────────────┤
+   │ NEXT_PUBLIC_SUPABASE_ANON_KEY                          │
+   │ eyJhbGc...                                              │
+   ├─────────────────────────────────────────────────────────┤
+   │ SUPABASE_SERVICE_ROLE_KEY (MARK AS SECRET)             │
+   │ eyJhbGc...                                              │
+   ├─────────────────────────────────────────────────────────┤
+   │ NEXT_PUBLIC_ANALYTICS_ID                               │
+   │ G-XXXXXXXXXX                                            │
+   └─────────────────────────────────────────────────────────┘
+
+5. Save and trigger redeploy
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ FINAL CHECKLIST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+□ Created .env.local with all variables
+□ Supabase tables created (run SUPABASE_SCHEMA.sql)
+□ NEXTAUTH_SECRET generated and added
+□ Supabase keys copied to .env.local
+□ Google Analytics ID added
+□ npm run dev works without errors
+□ Can login to /admin/login
+□ Flier generator loads at /admin/flier-generator
+□ Can create and download fliers
+□ Environment variables added to Netlify Dashboard
+□ Push to master triggers Netlify build
+□ Production site works at netlify URL
+
+Once all checkboxes ✅, you're production ready!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📚 DOCUMENTATION FILES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Reference these files as needed:
+
+1. SUPABASE_SCHEMA.sql
+   └─ Copy & run in Supabase SQL Editor
+
+2. ENV_SETUP_GUIDE.md
+   └─ Detailed environment variable setup
+
+3. URLS_CREDENTIALS_REFERENCE.txt
+   └─ Quick reference for all URLs & credentials
+
+4. QUICK_START_FLIER.md
+   └─ Quick start guide for flier generator
+
+5. FLIER_GENERATOR_GUIDE.md
+   └─ Complete flier generator documentation
+
+═══════════════════════════════════════════════════════════════════════════════

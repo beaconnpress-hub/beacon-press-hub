@@ -12,8 +12,8 @@
 You're using NETLIFY, not Vercel!
 
 Your URLs MUST be:
-  PRODUCTION: https://beacon-press-hub-news.netlify.app
-  LOCAL: http://localhost:3000
+  PRODUCTION: <https://beacon-press-hub-news.netlify.app>
+  LOCAL: <http://localhost:3000>
 
 NOT any Vercel URLs!
 
@@ -23,13 +23,13 @@ NOT any Vercel URLs!
 
 FOR LOCAL DEVELOPMENT (.env.local):
 ┌─────────────────────────────────────────────────────────────────────────┐
-│ NEXTAUTH_URL=http://localhost:3000                                       │
+│ NEXTAUTH_URL=<http://localhost:3000>                                       │
 │ NEXTAUTH_SECRET=IWVf9N/ZJf8O+D/lezppuZptoAi/X0ysVlmsCt3H3VA=           │
 └─────────────────────────────────────────────────────────────────────────┘
 
 FOR PRODUCTION (Netlify Dashboard):
 ┌─────────────────────────────────────────────────────────────────────────┐
-│ NEXTAUTH_URL=https://beacon-press-hub-news.netlify.app                  │
+│ NEXTAUTH_URL=<https://beacon-press-hub-news.netlify.app>                  │
 │ NEXTAUTH_SECRET=IWVf9N/ZJf8O+D/lezppuZptoAi/X0ysVlmsCt3H3VA=           │
 │                                                                          │
 │ (Keep the same NEXTAUTH_SECRET in both local and production)            │
@@ -40,7 +40,7 @@ FOR PRODUCTION (Netlify Dashboard):
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Step 1: Go to Netlify Dashboard
-  https://app.netlify.com
+  <https://app.netlify.com>
 
 Step 2: Select your site
   "beacon-press-hub-news"
@@ -57,7 +57,7 @@ Step 5: Add Environment Variables
 Add THESE variables (exact values):
 ┌─────────────────────────────────────────────────────────────────────────┐
 │ Variable: NEXTAUTH_URL                                                  │
-│ Value: https://beacon-press-hub-news.netlify.app                        │
+│ Value: <https://beacon-press-hub-news.netlify.app>                        │
 │ (NOT localhost, NOT Vercel)                                              │
 ├─────────────────────────────────────────────────────────────────────────┤
 │ Variable: NEXTAUTH_SECRET                                               │
@@ -65,7 +65,7 @@ Add THESE variables (exact values):
 │ (Same as your local .env.local)                                         │
 ├─────────────────────────────────────────────────────────────────────────┤
 │ Variable: NEXT_PUBLIC_SUPABASE_URL                                      │
-│ Value: https://ptenbtyommucwleqzdwd.supabase.co                         │
+│ Value: <https://ptenbtyommucwleqzdwd.supabase.co>                         │
 ├─────────────────────────────────────────────────────────────────────────┤
 │ Variable: NEXT_PUBLIC_SUPABASE_ANON_KEY                                 │
 │ Value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...                         │
@@ -82,48 +82,50 @@ Step 6: Trigger Redeploy
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Go to Supabase Dashboard:
-  https://supabase.com/dashboard/project/ptenbtyommucwleqzdwd/auth/url-configuration
+  <https://supabase.com/dashboard/project/ptenbtyommucwleqzdwd/auth/url-configuration>
 
 Site URL (set to):
-  https://beacon-press-hub-news.netlify.app
+  <https://beacon-press-hub-news.netlify.app>
 
 Redirect URLs (add BOTH):
-  ✓ http://localhost:3000/auth/callback        (for local testing)
-  ✓ https://beacon-press-hub-news.netlify.app/auth/callback  (for production)
-  ✓ https://beacon-press-hub-news.netlify.app/admin/login    (for production)
+  ✓ <http://localhost:3000/auth/callback>        (for local testing)
+  ✓ <https://beacon-press-hub-news.netlify.app/auth/callback>  (for production)
+  ✓ <https://beacon-press-hub-news.netlify.app/admin/login>    (for production)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🧪 HOW TO TEST
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 LOCAL TESTING:
+
   1. npm run dev
-  2. Go to: http://localhost:3000/admin/login
-  3. Email: admin@beaconpress.com
+  2. Go to: <http://localhost:3000/admin/login>
+  3. Email: <admin@beaconpress.com>
   4. Password: Beacon123!@#
-  5. Should redirect to: http://localhost:3000/admin/publisher
+  5. Should redirect to: <http://localhost:3000/admin/publisher>
 
 PRODUCTION TESTING (after deploying to Netlify):
-  1. Go to: https://beacon-press-hub-news.netlify.app/admin/login
-  2. Email: admin@beaconpress.com
+
+  1. Go to: <https://beacon-press-hub-news.netlify.app/admin/login>
+  2. Email: <admin@beaconpress.com>
   3. Password: Beacon123!@#
-  4. Should redirect to: https://beacon-press-hub-news.netlify.app/admin/publisher
+  4. Should redirect to: <https://beacon-press-hub-news.netlify.app/admin/publisher>
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ❌ COMMON NETLIFY MISTAKES TO AVOID
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ❌ Don't use Vercel URLs:
-   NEXTAUTH_URL=https://vercel.com/... ← WRONG!
-   ✓ NEXTAUTH_URL=https://beacon-press-hub-news.netlify.app ← CORRECT!
+   NEXTAUTH_URL=<https://vercel.com/>... ← WRONG!
+   ✓ NEXTAUTH_URL=<https://beacon-press-hub-news.netlify.app> ← CORRECT!
 
 ❌ Don't forget to update Netlify environment variables:
    Just having .env.local won't work on Netlify
    ✓ Must add to Netlify Dashboard → Site Settings → Environment
 
 ❌ Don't use localhost for production:
-   NEXTAUTH_URL=http://localhost:3000 ← WRONG for production!
-   ✓ NEXTAUTH_URL=https://beacon-press-hub-news.netlify.app ← CORRECT!
+   NEXTAUTH_URL=<http://localhost:3000> ← WRONG for production!
+   ✓ NEXTAUTH_URL=<https://beacon-press-hub-news.netlify.app> ← CORRECT!
 
 ❌ Don't forget to redeploy after adding variables:
    ✓ After adding env vars, trigger new deploy or push to master
@@ -154,9 +156,9 @@ Your netlify.toml already has:
 ┌─────────────────────────────────────────────────────────────────────────┐
 │ Setting         │ Local Value              │ Netlify Value              │
 ├─────────────────────────────────────────────────────────────────────────┤
-│ NEXTAUTH_URL    │ http://localhost:3000    │ https://beacon-press...    │
+│ NEXTAUTH_URL    │ <http://localhost:3000>    │ <https://beacon-press>...    │
 │ NEXTAUTH_SECRET │ IWVf9N/ZJf8O+D/...       │ IWVf9N/ZJf8O+D/... (same) │
-│ Supabase URL    │ https://ptenbty...       │ https://ptenbty... (same)  │
+│ Supabase URL    │ <https://ptenbty>...       │ <https://ptenbty>... (same)  │
 │ Supabase Keys   │ (same keys)              │ (same keys)                │
 └─────────────────────────────────────────────────────────────────────────┘
 
@@ -165,19 +167,19 @@ Your netlify.toml already has:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Netlify Dashboard:
-  https://app.netlify.com/sites/beacon-press-hub-news/settings/general
+  <https://app.netlify.com/sites/beacon-press-hub-news/settings/general>
 
 Netlify Environment Variables:
-  https://app.netlify.com/sites/beacon-press-hub-news/settings/build#environment
+  <https://app.netlify.com/sites/beacon-press-hub-news/settings/build#environment>
 
 Supabase Auth Configuration:
-  https://supabase.com/dashboard/project/ptenbtyommucwleqzdwd/auth/url-configuration
+  <https://supabase.com/dashboard/project/ptenbtyommucwleqzdwd/auth/url-configuration>
 
 Your Netlify Site:
-  https://beacon-press-hub-news.netlify.app
+  <https://beacon-press-hub-news.netlify.app>
 
 Local Development:
-  http://localhost:3000
+  <http://localhost:3000>
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ✅ DEPLOYMENT WORKFLOW
@@ -185,7 +187,7 @@ Local Development:
 
 1. LOCAL DEVELOPMENT:
    npm run dev
-   → http://localhost:3000 (uses .env.local with localhost URL)
+   → <http://localhost:3000> (uses .env.local with localhost URL)
 
 2. TEST LOCALLY:
    Log in and test features
@@ -199,10 +201,10 @@ Local Development:
 4. NETLIFY AUTO-DEPLOYS:
    → Picks up NEXTAUTH_URL from Netlify env vars
    → Builds with production settings
-   → Deploys to https://beacon-press-hub-news.netlify.app
+   → Deploys to <https://beacon-press-hub-news.netlify.app>
 
 5. TEST PRODUCTION:
-   https://beacon-press-hub-news.netlify.app/admin/login
+   <https://beacon-press-hub-news.netlify.app/admin/login>
    → Should work with same credentials
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

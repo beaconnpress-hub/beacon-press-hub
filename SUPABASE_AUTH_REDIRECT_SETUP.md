@@ -9,6 +9,7 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Your Supabase authentication is still pointing to localhost, but you need to:
+
 1. Keep localhost for LOCAL development
 2. Add your Netlify URL for PRODUCTION deployment
 3. Configure both so auth works in both environments
@@ -19,7 +20,7 @@ Your Supabase authentication is still pointing to localhost, but you need to:
 
 STEP 1: Go to Supabase Dashboard
 ┌─────────────────────────────────────────────────────────────────────────┐
-│ 1. Visit: https://supabase.com/dashboard                               │
+│ 1. Visit: <https://supabase.com/dashboard>                               │
 │ 2. Select your project: ptenbtyommucwleqzdwd                            │
 │ 3. Go to: Authentication (left sidebar)                                 │
 │ 4. Click: URL Configuration                                             │
@@ -30,10 +31,10 @@ STEP 2: Configure Site URL
 │ "Site URL" should be your PUBLIC URL:                                   │
 │                                                                          │
 │ For LOCAL TESTING:                                                       │
-│   http://localhost:3000                                                 │
+│   <http://localhost:3000>                                                 │
 │                                                                          │
 │ For PRODUCTION:                                                          │
-│   https://beacon-press-hub-news.netlify.app                             │
+│   <https://beacon-press-hub-news.netlify.app>                             │
 │                                                                          │
 │ 👉 SET IT TO YOUR CURRENT ENVIRONMENT                                   │
 │    (Start with localhost for local development)                         │
@@ -44,24 +45,24 @@ STEP 3: Add Redirect URLs (Most Important!)
 │ "Redirect URLs" should include BOTH:                                     │
 │                                                                          │
 │ For LOCAL Development:                                                   │
-│   http://localhost:3000/auth/callback                                   │
-│   http://localhost:3000/admin/login                                     │
+│   <http://localhost:3000/auth/callback>                                   │
+│   <http://localhost:3000/admin/login>                                     │
 │                                                                          │
 │ For PRODUCTION:                                                          │
-│   https://beacon-press-hub-news.netlify.app/auth/callback              │
-│   https://beacon-press-hub-news.netlify.app/admin/login                │
+│   <https://beacon-press-hub-news.netlify.app/auth/callback>              │
+│   <https://beacon-press-hub-news.netlify.app/admin/login>                │
 │                                                                          │
 │ HOW TO ADD:                                                              │
 │ 1. Click "Add URL" button                                               │
-│ 2. Paste: http://localhost:3000/auth/callback                           │
+│ 2. Paste: <http://localhost:3000/auth/callback>                           │
 │ 3. Click "Save"                                                          │
 │ 4. Repeat for each URL                                                  │
 │                                                                          │
 │ ✅ FINAL LIST SHOULD HAVE:                                              │
-│   - http://localhost:3000/auth/callback                                 │
-│   - http://localhost:3000/admin/login                                   │
-│   - https://beacon-press-hub-news.netlify.app/auth/callback            │
-│   - https://beacon-press-hub-news.netlify.app/admin/login              │
+│   - <http://localhost:3000/auth/callback>                                 │
+│   - <http://localhost:3000/admin/login>                                   │
+│   - <https://beacon-press-hub-news.netlify.app/auth/callback>            │
+│   - <https://beacon-press-hub-news.netlify.app/admin/login>              │
 └─────────────────────────────────────────────────────────────────────────┘
 
 STEP 4: Additional Email Settings (Optional but Recommended)
@@ -78,7 +79,7 @@ STEP 4: Additional Email Settings (Optional but Recommended)
 
 Your environment variables are now configured:
 
-✅ NEXTAUTH_URL=http://localhost:3000
+✅ NEXTAUTH_URL=<http://localhost:3000>
 ✅ NEXTAUTH_SECRET=IWVf9N/ZJf8O+D/lezppuZptoAi/X0ysVlmsCt3H3VA=
 
 These tell NextAuth:
@@ -87,7 +88,7 @@ These tell NextAuth:
   • Where to redirect after login
 
 For PRODUCTION (Netlify):
-  Change NEXTAUTH_URL to: https://beacon-press-hub-news.netlify.app
+  Change NEXTAUTH_URL to: <https://beacon-press-hub-news.netlify.app>
   Keep NEXTAUTH_SECRET the same (or generate a new one)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -95,9 +96,10 @@ For PRODUCTION (Netlify):
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 When user logs in:
+
   1. App sends credentials to Supabase
   2. Supabase validates & creates session
-  3. Redirects to: http://localhost:3000/auth/callback
+  3. Redirects to: <http://localhost:3000/auth/callback>
   4. NextAuth processes the callback
   5. Sets encrypted session cookie
   6. Redirects to admin dashboard (/admin/publisher)
@@ -115,10 +117,10 @@ When user logs in:
    npm run dev
 
 2. Go to:
-   http://localhost:3000/admin/login
+   <http://localhost:3000/admin/login>
 
 3. Try logging in:
-   Email: admin@beaconpress.com
+   Email: <admin@beaconpress.com>
    Password: Beacon123!@#
 
 4. Check for errors:
@@ -139,12 +141,12 @@ When user logs in:
 When deploying to Netlify:
 
 1. UPDATE .env variables:
-   NEXTAUTH_URL=https://beacon-press-hub-news.netlify.app
+   NEXTAUTH_URL=<https://beacon-press-hub-news.netlify.app>
 
 2. ADD to Netlify Dashboard:
    Settings → Build & Deploy → Environment
-   
-   NEXTAUTH_URL=https://beacon-press-hub-news.netlify.app
+
+   NEXTAUTH_URL=<https://beacon-press-hub-news.netlify.app>
    NEXTAUTH_SECRET=(same as local)
    NEXT_PUBLIC_SUPABASE_URL=(your URL)
    NEXT_PUBLIC_SUPABASE_ANON_KEY=(your key)
@@ -154,7 +156,7 @@ When deploying to Netlify:
    git push origin master
 
 4. Test:
-   https://beacon-press-hub-news.netlify.app/admin/login
+   <https://beacon-press-hub-news.netlify.app/admin/login>
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ⚠️ COMMON ISSUES & FIXES
@@ -183,14 +185,14 @@ When deploying to Netlify:
 🔗 QUICK REFERENCE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Supabase Dashboard: https://supabase.com/dashboard
+Supabase Dashboard: <https://supabase.com/dashboard>
 Your Project ID: ptenbtyommucwleqzdwd
 
 Auth Configuration Link:
-https://supabase.com/dashboard/project/ptenbtyommucwleqzdwd/auth/url-configuration
+<https://supabase.com/dashboard/project/ptenbtyommucwleqzdwd/auth/url-configuration>
 
-Local Site URL: http://localhost:3000
-Production Site URL: https://beacon-press-hub-news.netlify.app
+Local Site URL: <http://localhost:3000>
+Production Site URL: <https://beacon-press-hub-news.netlify.app>
 
 Admin Login: /admin/login
 Publisher: /admin/publisher

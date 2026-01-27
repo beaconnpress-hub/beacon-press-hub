@@ -163,11 +163,10 @@ export default function Home() {
                 </p>
 
                 <a
-                  href={heroPost.link}
-                  target="_blank"
+                  href={`/posts/${heroPost.id}`}
                   className="inline-flex items-center text-[#00B2FF] font-bold hover:underline decoration-2 underline-offset-4 text-sm"
                 >
-                  View Offer at {heroPost.author} →
+                  Read Full Story →
                 </a>
               </>
             ) : (
@@ -185,14 +184,14 @@ export default function Home() {
             {loading ? (
               <p className="text-slate-500 text-sm">Updating feed...</p>
             ) : trendingSide.map((item) => (
-              <div key={item.id} className="group cursor-pointer border-b border-white/5 pb-4 last:border-0">
+              <a key={item.id} href={`/posts/${item.id}`} className="group cursor-pointer border-b border-white/5 pb-4 last:border-0 hover:opacity-80 transition">
                 <span className="text-[10px] font-bold text-[#00B2FF] uppercase mb-1 block">
                   {item.category}
                 </span>
-                <h4 className="text-md font-bold leading-snug group-hover:text-slate-300 transition-colors">
+                <h4 className="text-md font-bold leading-snug group-hover:text-[#00B2FF] transition-colors">
                   {item.title}
                 </h4>
-              </div>
+              </a>
             ))}
 
             {/* NATIVE AD SLOT (Text Link - Keep Static) */}

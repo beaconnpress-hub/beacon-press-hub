@@ -8,11 +8,11 @@ export const dynamic = "force-dynamic";
 export default function AdminPublisher() {
   const router = useRouter();
   const [post, setPost] = useState({
-    title: "", 
-    category: "Politics", 
-    summary: "", 
-    image_url: "", 
-    author: "Beacon Admin", 
+    title: "",
+    category: "Politics",
+    summary: "",
+    image_url: "",
+    author: "Beacon Admin",
     is_sponsored: false,
     link: ""
   });
@@ -65,11 +65,11 @@ export default function AdminPublisher() {
       } else {
         setMessage("✅ Post published successfully!");
         setPost({
-          title: "", 
-          category: "Politics", 
-          summary: "", 
-          image_url: "", 
-          author: "Beacon Admin", 
+          title: "",
+          category: "Politics",
+          summary: "",
+          image_url: "",
+          author: "Beacon Admin",
           is_sponsored: false,
           link: ""
         });
@@ -91,14 +91,14 @@ export default function AdminPublisher() {
             </h1>
             <p className="text-xs text-slate-400 uppercase tracking-widest font-bold">Admin Dashboard</p>
             <div className="flex gap-4 mt-3">
-              <a 
-                href="/admin/publisher" 
+              <a
+                href="/admin/publisher"
                 className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg font-bold text-sm uppercase transition"
               >
                 📝 Publisher
               </a>
-              <a 
-                href="/admin/flier-generator" 
+              <a
+                href="/admin/flier-generator"
                 className="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-lg font-bold text-sm uppercase transition"
               >
                 🎨 Flier Generator
@@ -121,9 +121,9 @@ export default function AdminPublisher() {
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block">
                     Headline (Required)
                   </label>
-                  <input 
-                    type="text" 
-                    placeholder="Breaking news..." 
+                  <input
+                    type="text"
+                    placeholder="Breaking news..."
                     value={post.title}
                     onChange={(e) => setPost({ ...post, title: e.target.value })}
                     className="w-full bg-black/40 p-4 rounded-xl border border-white/5 outline-none focus:border-blue-500 text-white placeholder:text-slate-600 transition"
@@ -134,7 +134,7 @@ export default function AdminPublisher() {
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block">
                     Category
                   </label>
-                  <select 
+                  <select
                     value={post.category}
                     onChange={(e) => setPost({ ...post, category: e.target.value })}
                     className="w-full bg-black/40 p-4 rounded-xl border border-white/5 outline-none focus:border-blue-500 text-white transition"
@@ -152,9 +152,9 @@ export default function AdminPublisher() {
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block">
                     Summary (Optional)
                   </label>
-                  <input 
-                    type="text" 
-                    placeholder="Brief preview..." 
+                  <input
+                    type="text"
+                    placeholder="Brief preview..."
                     value={post.summary}
                     maxLength={150}
                     onChange={(e) => setPost({ ...post, summary: e.target.value })}
@@ -167,15 +167,15 @@ export default function AdminPublisher() {
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block">
                     Featured Image (Optional)
                   </label>
-                  <input 
-                    type="text" 
-                    placeholder="https://unsplash.com/..." 
+                  <input
+                    type="text"
+                    placeholder="https://unsplash.com/..."
                     value={post.image_url}
                     onChange={(e) => setPost({ ...post, image_url: e.target.value })}
                     className="w-full bg-black/40 p-4 rounded-xl border border-white/5 outline-none focus:border-blue-500 text-white placeholder:text-slate-600 transition"
                   />
                   {post.image_url && (
-                    <img 
+                    <img
                       src={post.image_url}
                       alt="Preview"
                       className="w-full h-48 object-cover rounded-xl border border-white/10 mt-3"
@@ -187,8 +187,8 @@ export default function AdminPublisher() {
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block">
                     Summary (Required)
                   </label>
-                  <textarea 
-                    placeholder="Write article summary or story..." 
+                  <textarea
+                    placeholder="Write article summary or story..."
                     value={post.summary}
                     onChange={(e) => setPost({ ...post, summary: e.target.value })}
                     className="w-full bg-black/40 p-4 rounded-xl border border-white/5 outline-none focus:border-blue-500 text-white placeholder:text-slate-600 h-48 resize-none transition"
@@ -200,9 +200,9 @@ export default function AdminPublisher() {
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block">
                     Read More Link (Optional)
                   </label>
-                  <input 
-                    type="url" 
-                    placeholder="https://example.com/..." 
+                  <input
+                    type="url"
+                    placeholder="https://example.com/..."
                     value={post.link}
                     onChange={(e) => setPost({ ...post, link: e.target.value })}
                     className="w-full bg-black/40 p-4 rounded-xl border border-white/5 outline-none focus:border-blue-500 text-white placeholder:text-slate-600 transition"
@@ -211,8 +211,8 @@ export default function AdminPublisher() {
 
                 <div className="p-4 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl border border-white/5">
                   <label className="flex items-center gap-3 cursor-pointer">
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       checked={post.is_sponsored}
                       onChange={(e) => setPost({ ...post, is_sponsored: e.target.checked })}
                       className="w-5 h-5 rounded"
@@ -225,17 +225,16 @@ export default function AdminPublisher() {
 
                 {message && (
                   <div
-                    className={`p-4 rounded-xl text-center font-bold text-sm ${
-                      message.includes("✅")
+                    className={`p-4 rounded-xl text-center font-bold text-sm ${message.includes("✅")
                         ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
                         : "bg-red-500/20 text-red-400 border border-red-500/30"
-                    }`}
+                      }`}
                   >
                     {message}
                   </div>
                 )}
 
-                <button 
+                <button
                   onClick={handlePublish}
                   disabled={loading}
                   className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 py-6 rounded-xl font-black text-sm uppercase tracking-widest transition disabled:opacity-50 disabled:cursor-not-allowed"

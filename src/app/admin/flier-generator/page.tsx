@@ -2,8 +2,12 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { createBrowserClient } from '@supabase/ssr';
+import toast from 'react-hot-toast';
+import { useAdminAuth, AdminLoadingSpinner } from '@/lib/useAdminAuth';
 import RealEstateFlier from '@/components/marketing/RealEstateFlier';
 import { BRAND_COLORS } from '@/lib/branding/colors';
+import type { FlierData } from '@/lib/types';
 
 interface FlierFormData {
   title: string;
@@ -29,8 +33,16 @@ const defaultHighlights = [
 
 export default function FlierGeneratorPage() {
   const router = useRouter();
+  const { isAuthorized, loading } = useAdminAuth();
+  
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+
   const [format, setFormat] = useState<'instagram-story' | 'facebook' | 'whatsapp' | 'digital' | 'print'>('instagram-story');
   const [highlightInput, setHighlightInput] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState<FlierFormData>({
     title: 'Greenfield Estate Premium Plots',
     location: 'Lagos, Nigeria',
@@ -70,6 +82,46 @@ export default function FlierGeneratorPage() {
     document.cookie = 'admin_session=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     router.push('/admin/login');
   };
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    const flierData: FlierData = {
+      title: formData.title,
+      location: formData.location,
+      price: formData.pricePerPlot,
+      image_url: formData.image || '',
+      features: formData.highlights,
+      contact_info: {
+        name: 'Agent',
+        phone: formData.phone,
+        email: formData.email,
+      },
+    };
+
+    try {
+      const { error } = await supabase.from('fliers').insert([flierData]);
+
+      if (error) throw error;
+
+      toast.success('Flier saved to library!');
+      router.push('/admin/fliers');
+    } catch (err: unknown) {
+      const errorMsg = err instanceof Error ? err.message : 'Failed to save flier';
+      toast.error(errorMsg);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // Show loading state while checking authentication
+  if (loading) {
+    return <AdminLoadingSpinner />
+  }
+
+  // Redirect if not authorized
+  if (!isAuthorized) {
+    return null
+  }
 
   return (
     <div
@@ -343,6 +395,28 @@ export default function FlierGeneratorPage() {
             </h2>
             <div className="overflow-auto flex justify-center">
               <RealEstateFlier data={formData} format={format} />
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-4 mt-8 pt-6 border-t" style={{ borderColor: BRAND_COLORS.emeraldGreen }}>
+              <button
+                onClick={handleSave}
+                disabled={isSaving}
+                className="flex-1 px-6 py-3 rounded font-bold text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ background: isSaving ? '#888' : BRAND_COLORS.richGold }}
+              >
+                {isSaving ? 'Saving...' : '💾 Save Design to Library'}
+              </button>
+              <button
+                onClick={() => {
+                  // Download functionality could be added here
+                  toast.success('Download feature coming soon!')
+                }}
+                className="flex-1 px-6 py-3 rounded font-bold text-white transition"
+                style={{ background: BRAND_COLORS.emeraldGreen }}
+              >
+                📥 Download Image
+              </button>
             </div>
           </div>
         </div>

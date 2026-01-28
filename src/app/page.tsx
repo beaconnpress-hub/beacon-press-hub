@@ -1,7 +1,8 @@
 "use client";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase"; // Ensure you created src/lib/supabase.ts
+import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 
 // --- TYPES FOR DATABASE CONTENT ---
 type Post = {
@@ -10,12 +11,12 @@ type Post = {
   category: string;
   summary: string;
   author: string;
-  link: string;
+  link?: string;
   is_sponsored: boolean;
   created_at: string;
 };
 
-// --- STATIC DATA (Keep these static for now) ---
+// --- STATIC DATA ---
 const tickerNews = [
   "BREAKING: Bitcoin hits new all-time high amid regulatory talks...",
   "POLITICS: Senate approves new install mental housing bill...",
@@ -23,7 +24,7 @@ const tickerNews = [
   "SPORTS: Nigeria qualifies for 2026 World Cup finals...",
 ];
 
-const categories = ["All", "Politics", "Real Estate", "Crypto", "Tech", "Sports", "Entertainment"];
+const categories = ["All", "Politics", "Real Estate", "Crypto", "Tech", "Sports", "Entertainment", "Finance"];
 
 const globalNews = [
   { category: "Geopolitics", title: "UN Summit: Nations Agree on New AI Safety Protocols", color: "bg-blue-500" },
@@ -32,17 +33,20 @@ const globalNews = [
 ];
 
 export default function Home() {
+  const router = useRouter();
   const [activeCategory, setActiveCategory] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
 
   // --- DYNAMIC STATE (Live Data) ---
+  const [allPosts, setAllPosts] = useState<Post[]>([]);
   const [heroPost, setHeroPost] = useState<Post | null>(null);
-  const [trendingSide, setTrendingSide] = useState<Post[]>([]);
+  const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
 
   // --- FETCH DATA FROM SUPABASE ---
   useEffect(() => {
     async function fetchNews() {
-      // Fetch all posts
+      setLoading(true);
       const { data, error } = await supabase
         .from('posts')
         .select('*')
@@ -51,19 +55,44 @@ export default function Home() {
       if (error) {
         console.error("Error fetching data:", error);
       } else if (data) {
-        // 1. Find the Sponsored Post for the Hero
-        const sponsored = data.find((post: Post) => post.is_sponsored === true);
-        if (sponsored) setHeroPost(sponsored);
-
-        // 2. Find Non-Sponsored Posts for Trending Sidebar
-        const regular = data.filter((post: Post) => post.is_sponsored === false);
-        setTrendingSide(regular);
+        setAllPosts(data as Post[]);
+        // Find the Sponsored Post for the Hero
+        const sponsored = data.find((post: any) => post.is_sponsored === true);
+        if (sponsored) setHeroPost(sponsored as Post);
       }
       setLoading(false);
     }
 
     fetchNews();
   }, []);
+
+  // --- FILTER LOGIC (Search + Category) ---
+  useEffect(() => {
+    let filtered = allPosts;
+
+    // Filter by category
+    if (activeCategory !== "All") {
+      filtered = filtered.filter(
+        (post) => post.category && post.category.toLowerCase() === activeCategory.toLowerCase()
+      );
+    }
+
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(
+        (post) =>
+          post.title.toLowerCase().includes(query) ||
+          post.summary?.toLowerCase().includes(query) ||
+          post.category?.toLowerCase().includes(query)
+      );
+    }
+
+    // Exclude sponsored posts from the list (they're in hero)
+    filtered = filtered.filter((post) => !post.is_sponsored);
+
+    setFilteredPosts(filtered);
+  }, [activeCategory, searchQuery, allPosts]);
 
   return (
     <main className="min-h-screen bg-[#020617] text-white overflow-x-hidden relative selection:bg-cyan-500 selection:text-black font-sans">
@@ -83,7 +112,7 @@ export default function Home() {
 
       {/* --- NAVIGATION --- */}
       <nav className="relative z-20 flex justify-between items-center px-6 py-4 border-b border-white/5 bg-[#020617]/80 backdrop-blur-md sticky top-0">
-        <div className="text-2xl font-black italic tracking-tighter cursor-pointer">
+        <div className="text-2xl font-black italic tracking-tighter cursor-pointer" onClick={() => router.push('/')}>
           BEACON<span className="text-[#00B2FF]">PRESS</span>
         </div>
 
@@ -92,11 +121,16 @@ export default function Home() {
           <input
             type="text"
             placeholder="Search politics, crypto, land..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="bg-transparent border-none outline-none text-sm text-white w-full placeholder:text-slate-500"
           />
         </div>
 
-        <button className="bg-white/10 text-white px-5 py-2 rounded-lg font-bold hover:bg-white/20 transition-all border border-white/10 text-sm">
+        <button 
+          onClick={() => router.push('/admin/login')}
+          className="bg-white/10 text-white px-5 py-2 rounded-lg font-bold hover:bg-white/20 transition-all border border-white/10 text-sm"
+        >
           Sign In
         </button>
       </nav>
@@ -179,23 +213,29 @@ export default function Home() {
 
           {/* RIGHT COLUMN: TRENDING LIST (Real Data) */}
           <div className="lg:col-span-1 border-l border-white/10 lg:pl-8 flex flex-col gap-6">
-            <h3 className="font-black text-xl text-slate-500 uppercase tracking-widest">Trending Now</h3>
+            <h3 className="font-black text-xl text-slate-500 uppercase tracking-widest">
+              {searchQuery ? `Search Results (${filteredPosts.length})` : 'Trending Now'}
+            </h3>
 
             {loading ? (
               <p className="text-slate-500 text-sm">Updating feed...</p>
-            ) : trendingSide.map((item) => (
-              <a key={item.id} href={`/posts/${item.id}`} className="group cursor-pointer border-b border-white/5 pb-4 last:border-0 hover:opacity-80 transition">
-                <span className="text-[10px] font-bold text-[#00B2FF] uppercase mb-1 block">
-                  {item.category}
-                </span>
-                <h4 className="text-md font-bold leading-snug group-hover:text-[#00B2FF] transition-colors">
-                  {item.title}
-                </h4>
-              </a>
-            ))}
+            ) : filteredPosts.length > 0 ? (
+              filteredPosts.slice(0, 8).map((item) => (
+                <a key={item.id} href={`/posts/${item.id}`} className="group cursor-pointer border-b border-white/5 pb-4 last:border-0 hover:opacity-80 transition">
+                  <span className="text-[10px] font-bold text-[#00B2FF] uppercase mb-1 block">
+                    {item.category || 'Uncategorized'}
+                  </span>
+                  <h4 className="text-md font-bold leading-snug group-hover:text-[#00B2FF] transition-colors line-clamp-2">
+                    {item.title}
+                  </h4>
+                </a>
+              ))
+            ) : (
+              <p className="text-slate-500 text-sm">No posts found. Try a different search or category.</p>
+            )}
 
             {/* NATIVE AD SLOT (Text Link - Keep Static) */}
-            <div className="bg-[#1E293B]/50 p-4 rounded-xl border border-yellow-500/20">
+            <div className="bg-[#1E293B]/50 p-4 rounded-xl border border-yellow-500/20 mt-4">
               <p className="text-[10px] text-slate-400 uppercase font-bold mb-2">
                 Ad • Ay'Smart Investment Ltd
               </p>

@@ -1,0 +1,35 @@
+
+> beacon-press-hub@0.1.0 build
+> next build
+
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of C:\Users\HP-PC\package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * C:\Users\HP-PC\Desktop\Web_Projects_Hub\beacon-press-hub\package-lock.json
+
+▲ Next.js 16.1.1 (Turbopack)
+- Environments: .env.local
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 85s
+  Running TypeScript ...
+Failed to compile.
+
+./src/components/admin/PostForm.tsx:31:5
+Type error: Type 'Resolver<{ title: string; summary: string; category: "Politics" | "Tech" | "Real Estate" | "Business" | "Sports" | "Entertainment" | "Crypto"; content: string; image_url?: string | undefined; author?: string | undefined; is_sponsored?: boolean | undefined; link?: string | undefined; }, any, { ...; }>' is not assignable to type 'Resolver<{ title: string; summary: string; category: "Politics" | "Tech" | "Real Estate" | "Business" | "Sports" | "Entertainment" | "Crypto"; content: string; author: string; is_sponsored: boolean; image_url?: string | undefined; link?: string | undefined; }, any, { ...; }>'.
+  Types of parameters 'options' and 'options' are incompatible.
+    Type 'ResolverOptions<{ title: string; summary: string; category: "Politics" | "Tech" | "Real Estate" | "Business" | "Sports" | "Entertainment" | "Crypto"; content: string; author: string; is_sponsored: boolean; image_url?: string | undefined; link?: string | undefined; }>' is not assignable to type 'ResolverOptions<{ title: string; summary: string; category: "Politics" | "Tech" | "Real Estate" | "Business" | "Sports" | "Entertainment" | "Crypto"; content: string; image_url?: string | undefined; author?: string | undefined; is_sponsored?: boolean | undefined; link?: string | undefined; }>'.
+      Type 'string | undefined' is not assignable to type 'string'.
+        Type 'undefined' is not assignable to type 'string'.
+
+[0m [90m 29 |[39m     reset[33m,[39m
+ [90m 30 |[39m   } [33m=[39m useForm[33m<[39m[33mPostFormValues[39m[33m>[39m({
+[31m[1m>[22m[39m[90m 31 |[39m     resolver[33m:[39m zodResolver([33mPostSchema[39m)[33m,[39m
+ [90m    |[39m     [31m[1m^[22m[39m
+ [90m 32 |[39m     defaultValues[33m:[39m initialData [33m||[39m {
+ [90m 33 |[39m       title[33m:[39m [32m''[39m[33m,[39m
+ [90m 34 |[39m       category[33m:[39m [32m'Tech'[39m[33m,[39m[0m
+Next.js build worker exited with code: 1 and signal: null
